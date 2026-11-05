@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Naiyachon Ponthong">
+  <meta name="copyright" content="Naiyachon Ponthong">
+  <meta name="theme-color" content="#F26522">
+  <title>ProjectOne - บริหารโครงการและงบประมาณ</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  
+  <!-- เชื่อมโยงไฟล์ CSS สำหรับ GitHub Pages (ต้องสร้างโฟลเดอร์ css และใส่ไฟล์ style.css) -->
+  <link rel="stylesheet" href="css/style.css">
+  <style id="theme-vars"></style>
+</head>
+<body>
+
+  <!-- ===== Boot ===== -->
+  <div id="bootView" class="boot">
+    <div class="spinner-border" style="color:var(--sb-primary)" role="status"></div>
+    <div>กำลังโหลดระบบ...</div>
+  </div>
+
+  <!-- ===== Login ===== -->
+  <div id="loginView" class="d-none">
+    <div class="login-wrap">
+      <div class="login-art">
+        <div class="d-flex align-items-center gap-2">
+          <div class="sb-logo m-0" id="loginLogo"><i class="bi bi-kanban"></i></div>
+          <div>
+            <div class="fw-bold" id="loginOrg">ProjectOne</div>
+            <div class="small opacity-75" id="loginOrgSub"></div>
+          </div>
+        </div>
+        <div>
+          <h1 class="fw-bold mb-2">บริหารโครงการและงบประมาณ</h1>
+          <p class="opacity-75 mb-0" style="max-width:440px">วางแผน จัดสรรงบ ติดตามความก้าวหน้า และการเบิกจ่าย ตามปีงบประมาณ</p>
+        </div>
+        <div class="la-foot small opacity-75">BKLSM</div>
+      </div>
+      <div class="login-form">
+        <form class="login-card" id="loginForm" autocomplete="on">
+          <h2 class="fw-bold mb-1" style="font-size:1.45rem">เข้าสู่ระบบ</h2>
+          <p class="text-muted mb-4">ใช้ชื่อผู้ใช้และรหัสผ่านที่ได้รับจากผู้ดูแลระบบ</p>
+          <div class="mb-3">
+            <label class="form-label" for="lgUser">ชื่อผู้ใช้</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input type="text" class="form-control" id="lgUser" name="username" autocomplete="username" required autocapitalize="none">
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="form-label" for="lgPass">รหัสผ่าน</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-lock"></i></span>
+              <input type="password" class="form-control" id="lgPass" name="password" autocomplete="current-password" required>
+              <button class="btn btn-light" type="button" id="lgEye" aria-label="แสดงรหัสผ่าน"><i class="bi bi-eye"></i></button>
+            </div>
+          </div>
+          <button class="btn btn-primary w-100 btn-lg" type="submit" id="lgBtn">เข้าสู่ระบบ</button>
+          <div class="text-muted small mt-4 text-center">ลืมรหัสผ่าน ติดต่อผู้ดูแลระบบเพื่อรีเซ็ต</div>
+          <div id="poCreditLogin" class="po-host"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== App shell ===== -->
+  <div id="appView" class="d-none">
+    <nav class="sb-rail" aria-label="เมนูหลัก">
+      <a class="sb-logo" href="#/dashboard" id="railLogo" title="หน้าแรก"><i class="bi bi-kanban"></i></a>
+      <div class="sb-rail-items" id="railItems"></div>
+      <div class="sb-rail-bottom" id="railBottom"></div>
+    </nav>
+
+    <div class="sb-main">
+      <header class="sb-topbar">
+        <div class="sb-org">
+          <div class="o1" id="topOrg"></div>
+          <div class="o2" id="topOrgSub"></div>
+        </div>
+        <button class="sb-search" type="button" id="btnSearch" aria-label="ค้นหา">
+          <i class="bi bi-search"></i><span>ค้นหาเมนู</span><kbd>Ctrl K</kbd>
+        </button>
+        <button class="top-ico" type="button" id="btnFy" title="ปีงบประมาณ">
+          <i class="bi bi-calendar3"></i>
+        </button>
+        <div class="dropdown">
+          <button class="top-ico" type="button" id="btnBell" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" title="แจ้งเตือน">
+            <i class="bi bi-bell"></i><span class="bell-count d-none" id="bellCount"></span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end bell-menu p-0" id="bellMenu">
+            <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+              <b>แจ้งเตือน</b>
+              <button class="btn btn-sm btn-link text-decoration-none p-0" type="button" id="bellAll">ทำเครื่องหมายว่าอ่านแล้ว</button>
+            </div>
+            <div class="bell-list" id="bellList"></div>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="top-prof" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="avatar avatar-sm" id="topAvatar"></span>
+            <span class="p-txt">
+              <span class="p1 d-block" id="topName"></span>
+              <span class="p2 d-block" id="topRole"></span>
+            </span>
+            <i class="bi bi-chevron-down small text-muted p-txt"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#/account"><i class="bi bi-person-circle me-2"></i>บัญชีของฉัน</a></li>
+            <li><a class="dropdown-item" href="#/account/password"><i class="bi bi-key me-2"></i>เปลี่ยนรหัสผ่าน</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><button class="dropdown-item text-danger" type="button" id="btnLogout"><i class="bi bi-box-arrow-right me-2"></i>ออกจากระบบ</button></li>
+          </ul>
+        </div>
+      </header>
+      <main class="sb-content" id="page"></main>
+      <footer id="poCreditApp" class="po-host"></footer>
+    </div>
+
+    <nav class="sb-bottom" id="bottomNav" aria-label="เมนูมือถือ"></nav>
+  </div>
+
+  <!-- ===== Shared form modal (SP.ui) ===== -->
+  <div class="modal fade" id="spModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <form class="modal-content" id="spModalForm" novalidate autocomplete="off">
+        <div class="modal-header">
+          <h5 class="modal-title" id="spModalTitle"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
+        </div>
+        <div class="modal-body" id="spModalBody"></div>
+        <div class="modal-footer" id="spModalFoot">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">ยกเลิก</button>
+          <button type="submit" class="btn btn-primary" id="spModalSave">บันทึก</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== Search (Ctrl K) ===== -->
+  <div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body p-3">
+          <div class="input-group mb-2">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control" id="searchInput" placeholder="พิมพ์ชื่อเมนูหรือการตั้งค่า">
+          </div>
+          <div id="searchList" style="max-height:60vh;overflow-y:auto"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Mobile menu sheet ===== -->
+  <div class="offcanvas offcanvas-bottom menu-sheet" tabindex="-1" id="menuSheet" style="height:auto;max-height:80vh;border-radius:24px 24px 0 0">
+    <div class="offcanvas-header pb-0">
+      <h5 class="offcanvas-title fw-bold">เมนูทั้งหมด</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="ปิด"></button>
+    </div>
+    <div class="offcanvas-body pb-5"><div class="tile-grid" id="menuSheetGrid"></div></div>
+  </div>
+
+  <div id="toastBox" aria-live="polite"></div>
+  <div id="printArea"></div>
+  <style id="printPage"></style>
+
+  <!-- Script หลักของระบบ -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- ตั้งค่าเริ่มต้นสำหรับการรันบน Static Host (ปรับค่าใน Object ได้ตามต้องการ) -->
+  <script>
+    window.__START__ = { view: 'login' }; // จำลองค่าเริ่มต้นแทนการดึงจากเซิร์ฟเวอร์
+    // แนะนำ: ตั้งค่า API URL ชี้ไปยัง Google Apps Script (Web App) ของคุณที่นี่
+    // const GAS_API_URL = "https://script.google.com/macros/s/YOUR_ID/exec";
+  </script>
+  
+  <!-- เชื่อมโยงไฟล์ JS สำหรับ GitHub Pages (ต้องสร้างโฟลเดอร์ js และใส่ไฟล์เหล่านี้) -->
+  <script src="js/core.js"></script>
+  <script src="js/pages.js"></script>
+  <script src="js/projects.js"></script>
+  <script src="js/budget.js"></script>
+  <script src="js/progress.js"></script>
+</body>
+</html>
