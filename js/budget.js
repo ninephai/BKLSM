@@ -1,3 +1,4 @@
+<script>
 /* พัฒนาโดย นายเกียรติอนันต์ สุกทน · Copyright (c) 2026 นายเกียรติอนันต์ สุกทน */
 /* ==========================================================
    ProjectOne : js_budget  (ภาพรวมงบ, การจัดสรร, โอนงบ)
@@ -486,3 +487,4 @@
     if (/^view\//.test(param || '')) SP.openDisbDetail(param.slice(5), function () { lv.reload(); });
   };
 })();
+</script>
